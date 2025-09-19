@@ -22,36 +22,61 @@ const saveCart = (cart) => sessionStorage.setItem("cart", JSON.stringify(cart));
 
 function renderProducts() {
   productList.innerHTML = products
-    .map(
-      (p) =>
-        `<li>${p.name} - $${p.price} <button class="add-to-cart-btn" data-id="${p.id}">Add to Cart</button></li>`
-    )
+    .map((p) => `<li>${p.name} - $${p.price} <button class="add-to-cart-btn" data-id="${p.id}">Add to Cart</button></li>`)
     .join("");
 }
 
 function renderCart() {
   const cart = getCart();
   cartList.innerHTML = cart
-    .map(
-      (item, i) =>
-        `<li>${item.name} - $${item.price} <button class="remove-from-cart-btn" data-index="${i}">❌</button></li>`
-    )
+    .map((item, i) => `<li>${item.name} - $${item.price} <button class="remove-from-cart-btn" data-index="${i}">❌</button></li>`)
     .join("");
 }
 
 function addToCart(productId) {
-  const cart = getCart();
   const product = products.find((p) => p.id === productId);
   if (!product) return;
+  const before = sessionStorage.getItem("cart");
+  let cart;
+  try { cart = before ? JSON.parse(before) : []; } catch { cart = []; }
   cart.push(product);
+  const now = sessionStorage.getItem("cart");
+  if (now !== before) {
+    try {
+      const current = now ? JSON.parse(now) : [];
+      current.push(product);
+      saveCart(current);
+      renderCart();
+      return;
+    } catch {
+      saveCart(cart);
+      renderCart();
+      return;
+    }
+  }
   saveCart(cart);
   renderCart();
 }
 
 function removeFromCart(index) {
-  const cart = getCart();
-  if (index < 0 || index >= cart.length) return;
-  cart.splice(index, 1);
+  const before = sessionStorage.getItem("cart");
+  let cart;
+  try { cart = before ? JSON.parse(before) : []; } catch { cart = []; }
+  if (index >= 0 && index < cart.length) cart.splice(index, 1);
+  const now = sessionStorage.getItem("cart");
+  if (now !== before) {
+    try {
+      const current = now ? JSON.parse(now) : [];
+      if (index >= 0 && index < current.length) current.splice(index, 1);
+      saveCart(current);
+      renderCart();
+      return;
+    } catch {
+      saveCart(cart);
+      renderCart();
+      return;
+    }
+  }
   saveCart(cart);
   renderCart();
 }
@@ -76,6 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   clearCartBtn.addEventListener("click", clearCart);
 });
+
 
 
 
