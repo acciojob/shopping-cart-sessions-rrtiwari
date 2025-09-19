@@ -27,8 +27,9 @@ function renderProducts() {
 }
 
 function renderCart() {
+  const cart = getCart();
   cartList.innerHTML = "";
-  getCart().forEach((item, index) => {
+  cart.forEach((item, index) => {
     const li = document.createElement("li");
     li.innerHTML = `${item.name} - $${item.price} 
       <button class="remove-from-cart-btn" data-index="${index}">❌</button>`;
@@ -39,6 +40,7 @@ function renderCart() {
     btn.addEventListener("click", (e) => removeFromCart(+e.target.dataset.index))
   );
 }
+
 
 function addToCart(productId) {
   const cart = getCart();
