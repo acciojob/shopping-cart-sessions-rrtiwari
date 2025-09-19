@@ -10,7 +10,11 @@ const productList = document.getElementById("product-list");
 const cartList = document.getElementById("cart-list");
 const clearCartBtn = document.getElementById("clear-cart-btn");
 
-const getCart = () => JSON.parse(sessionStorage.getItem("cart")) || [];
+const getCart = () => {
+  const stored = sessionStorage.getItem("cart");
+  return stored ? JSON.parse(stored) : [];
+};
+
 const saveCart = (cart) => sessionStorage.setItem("cart", JSON.stringify(cart));
 
 function renderProducts() {
@@ -41,7 +45,6 @@ function renderCart() {
   );
 }
 
-
 function addToCart(productId) {
   const cart = getCart();
   const product = products.find((p) => p.id === productId);
@@ -68,5 +71,6 @@ clearCartBtn.addEventListener("click", clearCart);
 
 renderProducts();
 renderCart();
+
 
 
