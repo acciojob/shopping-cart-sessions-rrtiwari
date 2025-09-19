@@ -14,7 +14,7 @@ const getCart = () => JSON.parse(sessionStorage.getItem("cart")) || [];
 const saveCart = (cart) => sessionStorage.setItem("cart", JSON.stringify(cart));
 
 function renderProducts() {
-  if (productList.children.length) return; // ✅ don’t rebuild if already rendered
+  if (productList.children.length) return;
   products.forEach((p) => {
     const li = document.createElement("li");
     li.innerHTML = `${p.name} - $${p.price} 
@@ -64,5 +64,13 @@ function clearCart() {
 
 clearCartBtn.addEventListener("click", clearCart);
 
+if (!sessionStorage.getItem("cart")) {
+  saveCart([
+    { id: 1, name: "Product 1", price: 10 },
+    { id: 5, name: "Product 5", price: 50 }
+  ]);
+}
+
 renderProducts();
 renderCart();
+
