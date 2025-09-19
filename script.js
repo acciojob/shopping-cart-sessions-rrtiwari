@@ -6,7 +6,7 @@ const products = [
   { id: 5, name: "Product 5", price: 50 }
 ];
 
-let cart = []; // start empty
+let cart = JSON.parse(sessionStorage.getItem("cart")) || [];
 
 const productList = document.getElementById("product-list");
 const cartList = document.getElementById("cart-list");
@@ -56,7 +56,7 @@ clearCartBtn.onclick = () => {
   renderCart();
 };
 
-saveCart(); // initialize sessionStorage as empty
 renderProducts();
 renderCart();
+
 
